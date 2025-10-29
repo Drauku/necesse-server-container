@@ -34,7 +34,7 @@
         SLOTS=10 \
         OWNER="" \
         MOTD="This server is made possible by Docker!" \
-        PASSWORD="" \
+        # PASSWORD="" \ # configure in entrypoint.sh instead of here
         PAUSE=0 \
         GIVE_CLIENTS_POWER=1 \
         LOGGING=1 \
@@ -44,9 +44,8 @@
     # ----------------------------------------------------------------------
     # Copy scripts
     # ----------------------------------------------------------------------
-    COPY entrypoint.sh /entrypoint.sh
-    COPY healthcheck.sh /healthcheck.sh
-    RUN chmod +x /entrypoint.sh /healthcheck.sh
+    COPY --chmod=0755 entrypoint.sh /entrypoint.sh
+    COPY --chmod=0755 healthcheck.sh /healthcheck.sh
 
     # ----------------------------------------------------------------------
     # HEALTHCHECK
