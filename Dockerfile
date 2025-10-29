@@ -2,7 +2,7 @@
     FROM steamcmd/steamcmd:latest AS steamcmd
 
     # ---- Stage 2: Runtime ---------------------------------------------------------
-    FROM openjdk:17-jre-slim AS runtime
+    FROM openjdk:17-jdk-slim AS runtime
 
     # Install 32-bit libs required by the game
     RUN apt-get update && apt-get install -y \
