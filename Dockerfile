@@ -43,13 +43,15 @@
     #   2. Generates / updates server.cfg from the ENV vars
     #   3. Starts the server
     COPY entrypoint.sh /entrypoint.sh
-    RUN chmod +x /entrypoint.sh
+    COPY healthcheck.sh /healthcheck.sh
+    RUN chmod +x /entrypoint.sh /healthcheck.sh
 
     # ------------------------------------------------------------------------------
     # Healthcheck – make sure the server script exists
-    HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=3 \
-        CMD test -f ${HOME}/necesse/StartServer-nogui.sh || exit 1
-
+    # HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=3 \
+    #     CMD test -f ${HOME}/necesse/StartServer-nogui.sh || exit 1
+    HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=5 \
+    CMD /healthcheck.sh || exit 1
     # Default Necesse port (UDP + TCP)
     EXPOSE 14159/udp 14159/tcp
 

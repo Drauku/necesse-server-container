@@ -19,6 +19,8 @@ chmod +x "${HOME}/necesse/StartServer-nogui.sh"
 CFG_DIR="${HOME}/necesse/cfg"
 mkdir -p "$CFG_DIR"
 CFG_FILE="${CFG_DIR}/server.cfg"
+LOG_DIR="${HOME}/.config/necesse/logs"
+mkdir -p "$LOG_DIR"
 
 # Helper: write a line only if the value is non-empty
 write_cfg() {
