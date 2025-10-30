@@ -33,12 +33,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/necesse-server
+          images: ghcr.io/drauku/necesse-server
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha
 
-      - name: Generate cache-busting timestamp
+      - name: Cache‑bust timestamp
         id: date
         run: echo "date=$(date -u '+%Y%m%dT%H%M%SZ')" >> $GITHUB_OUTPUT
 
@@ -46,6 +46,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
@@ -54,3 +55,5 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             CACHEBUST=${{ steps.date.outputs.date }}
+          provenance: false
+          sbom: false
