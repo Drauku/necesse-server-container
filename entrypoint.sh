@@ -10,7 +10,7 @@ steamcmd +login anonymous \
 chmod +x "${HOME}/necesse/StartServer-nogui.sh"
 
 # Config and log dirs (already exist, but ensure ownership)
-CFG_DIR="${HOME}/necesse/cfg"
+CFG_DIR="${HOME}/necesse/.config/Necesse/cfg"
 LOG_DIR="${HOME}/.config/Necesse/logs"
 mkdir -p "$CFG_DIR" "$LOG_DIR"
 chown "$USER":"$USER" "$CFG_DIR" "$LOG_DIR" || true
