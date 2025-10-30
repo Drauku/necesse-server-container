@@ -15,7 +15,7 @@ chmod +x "${GAME_DIR}/server/StartServer-nogui.sh"
 CFG_DIR="${GAME_DIR}/cfg"
 LOG_DIR="${GAME_DIR}/logs"
 mkdir -p "$CFG_DIR" "$LOG_DIR"
-echo -e "DEBUG: CFG_DIR: $CFG_DIR"
+# echo -e "DEBUG: CFG_DIR: $CFG_DIR"
 echo -e "DEBUG: LOG_DIR: $LOG_DIR"
 
 CFG_FILE="$CFG_DIR/server.cfg"
