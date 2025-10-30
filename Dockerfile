@@ -11,15 +11,16 @@
 
     # Create user with /necesse as home
     ENV USER=necesse
-    RUN adduser -D -h /necesse "$USER" && \
-        mkdir -p /necesse/.config/Necesse/server \
-                 /necesse/.config/Necesse/cfg \
-                 /necesse/.config/Necesse/logs \
-                 /necesse/.config/Necesse/cache \
-                 /necesse/.config/Necesse/saves && \
+    ENV GAMEDIR=/home/necesse/.config/Necesse
+    RUN adduser -D -h /home/necesse "$USER" && \
+        mkdir -p ${GAMEDIR}/server \
+                 ${GAMEDIR}/cfg \
+                 ${GAMEDIR}/logs \
+                 ${GAMEDIR}/cache \
+                 ${GAMEDIR}/saves && \
         chown -R "$USER":"$USER" /necesse
 
-    WORKDIR /necesse
+    WORKDIR /home/necesse
     USER "$USER"
 
     # Only JVMARGS

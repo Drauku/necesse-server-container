@@ -2,18 +2,18 @@
 set -euo pipefail
 
 echo "Updating Necesse server..."
-steamcmd +force_install_dir "/necesse/.config/Necesse/.config/Necesse/server"
 steamcmd +login anonymous
+steamcmd +force_install_dir "${GAME_DIR}/.config/Necesse/server"
 steamcmd +app_update 1169370 validate
 steamcmd +quit
-chmod +x "/necesse/.config/Necesse/server/StartServer-nogui.sh"
+chmod +x "${GAME_DIR}/server/StartServer-nogui.sh"
 
 # Necesse expects config in ~/.config/Necesse/cfg
-NECESSE_CFG_DIR="/necesse/.config/Necesse/cfg"
-NECESSE_LOG_DIR="/necesse/.config/Necesse/logs"
-mkdir -p "$NECESSE_CFG_DIR" "$NECESSE_LOG_DIR"
+CFG_DIR="${GAME_DIR}/cfg"
+LOG_DIR="${GAME_DIR}/logs"
+mkdir -p "$CFG_DIR" "$LOG_DIR"
 
-CFG_FILE="$NECESSE_CFG_DIR/server.cfg"
+CFG_FILE="$CFG_DIR/server.cfg"
 : > "$CFG_FILE"
 
 write_cfg() {
@@ -38,4 +38,4 @@ JAVA_CMD="java"
 [ -n "${JVMARGS:-}" ] && JAVA_CMD="${JAVA_CMD} ${JVMARGS}"
 
 echo "Starting Necesse server..."
-exec $JAVA_CMD -jar "/necesse/.config/Necesse/server/Server.jar" -nogui
+exec $JAVA_CMD -jar "${GAME_DIR}/server/Server.jar" -nogui
