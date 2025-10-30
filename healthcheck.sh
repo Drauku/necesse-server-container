@@ -1,27 +1,18 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
 
-# Paths (match the ones used in entrypoint.sh)
-SERVER_DIR="${HOME}/necesse"
-LOG_DIR="${HOME}/.config/Necesse/logs"
-LOG_FILE="${LOG_DIR}/latest.log"
+LOG_FILE="$HOME/.config/Necesse/logs/latest.log"
 
-# 1. Is the Java process running?
+# 1. Java process?
 if ! pgrep -f "java.*Server.jar" > /dev/null; then
-    echo "Java process not found"
+    echo "Java process not running"
     exit 1
 fi
 
-# 2. Did the server finish booting?
-if [[ -f "$LOG_FILE" ]]; then
-    if grep -q "Server started" "$LOG_FILE"; then
-        echo "Server is up and reports 'Server started'"
-        exit 0
-    else
-        echo "Server process alive but not yet started (no 'Server started' in log)"
-        exit 1
-    fi
+# 2. Server started?
+if [ -f "$LOG_FILE" ] && grep -q "Server started" "$LOG_FILE"; then
+    echo "Server is healthy"
+    exit 0
 else
-    echo "Log file missing – assuming server is still initializing"
+    echo "Server not ready (no 'Server started' in log)"
     exit 1
 fi
