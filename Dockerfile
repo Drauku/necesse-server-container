@@ -11,25 +11,22 @@ RUN apk add --no-cache libstdc++ libgcc
 COPY --from=steamcmd /usr/bin/steamcmd /usr/bin/steamcmd
 COPY --from=steamcmd /usr/lib/games/steam /usr/lib/games/steam
 
-# Create user and home
+# Create user and full config path
 ENV USER=necesse HOME=/home/necesse
-RUN mkdir -p "$HOME" && \
+RUN mkdir -p "$HOME/.config/Necesse/cfg" "$HOME/.config/Necesse/logs" && \
     adduser -D -h "$HOME" "$USER" && \
     chown -R "$USER":"$USER" "$HOME"
 
 WORKDIR "$HOME"
-
-# Switch to non-root
 USER "$USER"
 
-# Only JVMARGS is needed here
+# Only JVMARGS
 ENV JVMARGS=""
 
-# Copy scripts
+# Scripts
 COPY --chmod=0755 entrypoint.sh /entrypoint.sh
 COPY --chmod=0755 healthcheck.sh /healthcheck.sh
 
-# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=5 \
     CMD /healthcheck.sh || exit 1
 
