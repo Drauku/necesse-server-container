@@ -9,16 +9,17 @@ steamcmd +login anonymous \
 
 chmod +x "${HOME}/necesse/StartServer-nogui.sh"
 
+# Config and log dirs (already exist, but ensure ownership)
 CFG_DIR="${HOME}/necesse/cfg"
 LOG_DIR="${HOME}/.config/Necesse/logs"
-mkdir -p "${CFG_DIR}" "${LOG_DIR}"
+mkdir -p "$CFG_DIR" "$LOG_DIR"
+chown "$USER":"$USER" "$CFG_DIR" "$LOG_DIR" || true
 
-CFG_FILE="${CFG_DIR}/server.cfg"
-: > "${CFG_FILE}"
+CFG_FILE="$CFG_DIR/server.cfg"
+: > "$CFG_FILE"
 
 write_cfg() {
-  key="$1"
-  value="$2"
+  key="$1" value="$2"
   grep -v "^[[:space:]]*${key}[[:space:]]*=" "$CFG_FILE" > "${CFG_FILE}.tmp" || true
   mv "${CFG_FILE}.tmp" "$CFG_FILE"
   printf "%s=%s\n" "$key" "$value" >> "$CFG_FILE"
@@ -38,4 +39,4 @@ JAVA_CMD="java"
 [ -n "${JVMARGS:-}" ] && JAVA_CMD="${JAVA_CMD} ${JVMARGS}"
 
 echo "Starting Necesse server..."
-exec ${JAVA_CMD} -jar "${HOME}/necesse/Server.jar" -nogui
+exec $JAVA_CMD -jar "${HOME}/necesse/Server.jar" -nogui
