@@ -2,18 +2,16 @@
 set -euo pipefail
 
 echo "Updating Necesse server..."
-steamcmd +force_install_dir "${HOME}/necesse" \
-         +login anonymous \
+steamcmd +login anonymous \
+         +force_install_dir "/necesse/server" \
          +app_update 1169370 validate \
          +quit
 
-chmod +x "${HOME}/necesse/StartServer-nogui.sh"
+chmod +x "/necesse/server/StartServer-nogui.sh"
 
-# Config and log dirs (already exist, but ensure ownership)
-CFG_DIR="${HOME}/.config/Necesse/cfg"
-LOG_DIR="${HOME}/.config/Necesse/logs"
+CFG_DIR="/necesse/cfg"
+LOG_DIR="/necesse/logs"
 mkdir -p "$CFG_DIR" "$LOG_DIR"
-chown "$USER":"$USER" "$CFG_DIR" "$LOG_DIR" || true
 
 CFG_FILE="$CFG_DIR/server.cfg"
 : > "$CFG_FILE"
@@ -39,4 +37,4 @@ JAVA_CMD="java"
 [ -n "${JVMARGS:-}" ] && JAVA_CMD="${JAVA_CMD} ${JVMARGS}"
 
 echo "Starting Necesse server..."
-exec $JAVA_CMD -jar "${HOME}/necesse/Server.jar" -nogui
+exec $JAVA_CMD -jar "/necesse/server/Server.jar" -nogui
