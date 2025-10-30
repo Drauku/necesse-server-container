@@ -2,7 +2,7 @@
 FROM steamcmd/steamcmd:alpine AS steamcmd
 
 # ---- Stage 2: Runtime --------------------------------------------------------
-FROM eclipse-temurin:17-jre-alpine AS runtime
+FROM eclipse-temurin:17-jre AS runtime
 
 RUN apk add --no-cache libstdc++ libgcc
 
