@@ -1,6 +1,6 @@
 #!/bin/sh
 
-LOG_FILE="/necesse/logs/latest.log"
+LOG_FILE="/necesse/.config/Necesse/logs/healthcheck.log"
 
 if ! pgrep -f "java.*Server.jar" > /dev/null; then
     echo "Java process not running"

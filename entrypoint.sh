@@ -2,18 +2,18 @@
 set -euo pipefail
 
 echo "Updating Necesse server..."
-steamcmd +login anonymous \
-         +force_install_dir "/necesse/server" \
-         +app_update 1169370 validate \
-         +quit
+steamcmd +force_install_dir "/necesse/.config/Necesse/.config/Necesse/server"
+steamcmd +login anonymous
+steamcmd +app_update 1169370 validate
+steamcmd +quit
+chmod +x "/necesse/.config/Necesse/server/StartServer-nogui.sh"
 
-chmod +x "/necesse/server/StartServer-nogui.sh"
+# Necesse expects config in ~/.config/Necesse/cfg
+NECESSE_CFG_DIR="/necesse/.config/Necesse/cfg"
+NECESSE_LOG_DIR="/necesse/.config/Necesse/logs"
+mkdir -p "$NECESSE_CFG_DIR" "$NECESSE_LOG_DIR"
 
-CFG_DIR="/necesse/cfg"
-LOG_DIR="/necesse/logs"
-mkdir -p "$CFG_DIR" "$LOG_DIR"
-
-CFG_FILE="$CFG_DIR/server.cfg"
+CFG_FILE="$NECESSE_CFG_DIR/server.cfg"
 : > "$CFG_FILE"
 
 write_cfg() {
@@ -23,7 +23,8 @@ write_cfg() {
   printf "%s=%s\n" "$key" "$value" >> "$CFG_FILE"
 }
 
-write_cfg "world"               "${WORLD:-}"
+# Apply ENV vars
+write_cfg "world"               "${WORLD:-necessworld}"
 write_cfg "slots"               "${SLOTS:-10}"
 write_cfg "owner"               "${OWNER:-}"
 write_cfg "password"            "${PASSWORD:-}"
@@ -37,4 +38,4 @@ JAVA_CMD="java"
 [ -n "${JVMARGS:-}" ] && JAVA_CMD="${JAVA_CMD} ${JVMARGS}"
 
 echo "Starting Necesse server..."
-exec $JAVA_CMD -jar "/necesse/server/Server.jar" -nogui
+exec $JAVA_CMD -jar "/necesse/.config/Necesse/server/Server.jar" -nogui
