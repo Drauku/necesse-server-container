@@ -39,7 +39,7 @@ RUN mkdir -p \
         "$GAME_DIR/server" && \
     chown -R "$USER":"$USER" "$HOME"
 
-WORKDIR "$HOME"
+WORKDIR "$GAME_DIR"
 USER "$USER"
 
 # ----------------------------------------------------------------------
@@ -50,8 +50,8 @@ ENV JVMARGS=""
 # ----------------------------------------------------------------------
 # Scripts
 # ----------------------------------------------------------------------
-COPY --chmod=0755 entrypoint.sh   /entrypoint.sh
-COPY --chmod=0755 healthcheck.sh  /healthcheck.sh
+COPY --chmod=0755 entrypoint.sh   entrypoint.sh
+COPY --chmod=0755 healthcheck.sh  healthcheck.sh
 
 # ----------------------------------------------------------------------
 # Healthcheck & expose
@@ -61,4 +61,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=5 \
 
 EXPOSE 14159/tcp 14159/udp
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
