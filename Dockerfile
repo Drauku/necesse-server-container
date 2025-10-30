@@ -1,36 +1,38 @@
 # ---- Stage 1: SteamCMD -------------------------------------------------------
-    FROM steamcmd/steamcmd:alpine AS steamcmd
+FROM steamcmd/steamcmd:alpine AS steamcmd
 
-    # ---- Stage 2: Runtime --------------------------------------------------------
-    FROM eclipse-temurin:17-jre-alpine AS runtime
+# ---- Stage 2: Runtime --------------------------------------------------------
+FROM eclipse-temurin:17-jre-alpine AS runtime
 
-    RUN apk add --no-cache libstdc++ libgcc
+RUN apk add --no-cache libstdc++ libgcc
 
-    COPY --from=steamcmd /usr/bin/steamcmd /usr/bin/steamcmd
-    COPY --from=steamcmd /usr/lib/games/steam /usr/lib/games/steam
+COPY --from=steamcmd /usr/bin/steamcmd /usr/bin/steamcmd
+COPY --from=steamcmd /usr/lib/games/steam /usr/lib/games/steam
 
-    # Create user with /necesse as home
-    ENV USER=necesse
-    ENV GAMEDIR=/home/necesse/.config/Necesse
-    RUN adduser -D -h /home/necesse "$USER" && \
-        mkdir -p ${GAMEDIR}/server \
-                 ${GAMEDIR}/cfg \
-                 ${GAMEDIR}/logs \
-                 ${GAMEDIR}/cache \
-                 ${GAMEDIR}/saves && \
-        chown -R "$USER":"$USER" /necesse
+# Create user with /necesse as home
+ENV USER=necesse
+ENV HOME=/home/necesse
+ENV GAME_DIR="$HOME/.config/Necesse"
 
-    WORKDIR /home/necesse
-    USER "$USER"
+RUN adduser -D -h "$HOME" "$USER"
+RUN mkdir -p ${GAME_DIR}/cfg
+RUN mkdir -p ${GAME_DIR}/logs
+RUN mkdir -p ${GAME_DIR}/cache
+RUN mkdir -p ${GAME_DIR}/saves
+RUN mkdir -p ${GAME_DIR}/server
+RUN chown -R "$USER":"$USER" "$HOME"
 
-    # Only JVMARGS
-    ENV JVMARGS=""
+WORKDIR "$HOME"
+USER "$USER"
 
-    COPY --chmod=0755 entrypoint.sh /entrypoint.sh
-    COPY --chmod=0755 healthcheck.sh /healthcheck.sh
+# Only JVMARGS
+ENV JVMARGS=""
 
-    HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=5 \
-        CMD /healthcheck.sh || exit 1
+COPY --chmod=0755 entrypoint.sh /entrypoint.sh
+COPY --chmod=0755 healthcheck.sh /healthcheck.sh
 
-    EXPOSE 14159/udp 14159/tcp
-    ENTRYPOINT ["/entrypoint.sh"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=5 \
+    CMD /healthcheck.sh || exit 1
+
+EXPOSE 14159/udp 14159/tcp
+ENTRYPOINT ["/entrypoint.sh"]
